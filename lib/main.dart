@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:muskan_chef_app/SplashScreen.dart';
 import 'LoginPage.dart';
-import 'test.dart';
 
 void main() {
   runApp(MyApp());
@@ -20,7 +20,8 @@ class MyApp extends StatelessWidget {
         ),
         initialRoute: '/',
         routes: {
-          '/': (context) => LoginPage(),
+          '/': (context) => HomePage(),
+          '/login': (context) => LoginPage(),
         });
   }
 }
