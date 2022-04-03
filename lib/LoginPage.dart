@@ -110,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
           authProblem
               ? Text(
                   'Incorrect username or password',
-                  style: TextStyle(color: Colors.red, fontSize: 15),
+                  style: TextStyle(color: Colors.red, fontSize: 20),
                 )
               : Container()
         ],
