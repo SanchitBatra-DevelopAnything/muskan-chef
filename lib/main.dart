@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
 import 'LoginPage.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => HomePage(),
           '/login': (context) => LoginPage(),
+          '/orders': (context) => OrderPage(),
         });
   }
 }

@@ -12,6 +12,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   var chefNameController = TextEditingController();
   var passwordController = TextEditingController();
+  var authProblem = false;
 
   void moveToOrders() async {
     final SharedPreferences sharedPreferences =
@@ -19,6 +20,11 @@ class _LoginPageState extends State<LoginPage> {
     sharedPreferences.setString('chefName', chefNameController.text);
     sharedPreferences.setString('password', passwordController.text);
     sharedPreferences.setBool('loggedIn', true);
+    setState(() {
+      authProblem = false;
+    });
+
+    Navigator.of(context).pushReplacementNamed('/orders');
   }
 
   void checkAuth(List<Chef> allChefs) {
@@ -35,7 +41,13 @@ class _LoginPageState extends State<LoginPage> {
         }
       }
     }
-    print("auth = " + present.toString());
+    if (present) {
+      moveToOrders();
+    } else {
+      setState(() {
+        authProblem = true;
+      });
+    }
   }
 
   @override
@@ -94,7 +106,13 @@ class _LoginPageState extends State<LoginPage> {
               style: const TextStyle(fontSize: 15, color: Colors.white),
             ),
             color: Colors.red,
-          )
+          ),
+          authProblem
+              ? Text(
+                  'Incorrect username or password',
+                  style: TextStyle(color: Colors.red, fontSize: 15),
+                )
+              : Container()
         ],
       ),
     ));
