@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:muskan_chef_app/chef.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -65,7 +66,13 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void startTheApp(BuildContext ctx) {
+  void startTheApp(BuildContext ctx) async {
+    var sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.get('chefName') != null &&
+        sharedPreferences.get('loggedIn') == true) {
+      Navigator.of(context).pushReplacementNamed('/orders');
+      return;
+    }
     Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
   }
 
