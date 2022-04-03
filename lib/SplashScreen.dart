@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void startTheApp(BuildContext ctx) {
-    Navigator.of(ctx).pushReplacementNamed('/login');
+    Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
   }
 
   @override
