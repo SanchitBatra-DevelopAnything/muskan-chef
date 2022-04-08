@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:muskan_chef_app/order.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderPage extends StatefulWidget {
   const OrderPage({Key? key}) : super(key: key);
@@ -15,6 +16,7 @@ class _OrderPageState extends State<OrderPage> {
   var isLoading = false;
   var ordersLoaded = false;
   List<Order> todaysOrders = [];
+  var date = DateTime.now().toString().split(" ")[0];
 
   Future<void> fetchTodayOrders() async {
     var todaysDate = DateTime.now();
@@ -74,11 +76,27 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
+  void logout(BuildContext ctx) async {
+    var shared = await SharedPreferences.getInstance();
+    shared.clear();
+    Navigator.of(ctx).pushReplacementNamed('/');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          title: Text('Orders for ' + date),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  logout(context);
+                },
+                icon: Icon(Icons.login))
+          ],
+        ),
         body: Center(
-      child: Text('Welcome to orders..'),
-    ));
+          child: Text('Welcome to orders..'),
+        ));
   }
 }

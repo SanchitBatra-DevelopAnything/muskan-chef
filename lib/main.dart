@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
         title: 'Muskan-Chef',
         theme: ThemeData(
           primarySwatch: Colors.red,
-          canvasColor: Colors.white,
+          canvasColor: Color.fromARGB(255, 246, 248, 248),
         ),
         initialRoute: '/',
         routes: {
