@@ -18,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   List<Chef> allChefs = [];
   var isLoading = false;
   var dataLoaded = false;
+  var moveToLogin = false;
 
   Future<void> fetchAllChefs() async {
     var url = Uri.parse(
@@ -68,12 +69,27 @@ class _HomePageState extends State<HomePage> {
 
   void startTheApp(BuildContext ctx) async {
     var sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.get('chefName') != null &&
-        sharedPreferences.get('loggedIn') == true) {
-      Navigator.of(context).pushReplacementNamed('/orders');
-      return;
+    if (sharedPreferences.get('loggedIn') == false ||
+        sharedPreferences.get('loggedIn') == null) {
+      moveToLogin = true;
+      Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
+    } else {
+      //check if still a valid login , password badla to nahi?
+      var chef = sharedPreferences.get('chefName');
+      var oldPassword = sharedPreferences.get('password');
+      for (var i = 0; i < allChefs.length; i++) {
+        if (allChefs[i].chefName == chef &&
+            allChefs[i].password != oldPassword) {
+          moveToLogin = true;
+          sharedPreferences.clear();
+          Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
+          break;
+        }
+      }
     }
-    Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
+    if (!moveToLogin) {
+      Navigator.of(context).pushReplacementNamed('/orders');
+    }
   }
 
   @override
