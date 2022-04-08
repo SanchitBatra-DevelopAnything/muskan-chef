@@ -14,11 +14,14 @@ class _LoginPageState extends State<LoginPage> {
   var passwordController = TextEditingController();
   var authProblem = false;
 
-  void moveToOrders() async {
+  void moveToOrders(String manages) async {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('chefName', chefNameController.text);
     sharedPreferences.setString('password', passwordController.text);
+    print("Setting manages = " + manages);
+    sharedPreferences.setString('manages', manages);
+
     sharedPreferences.setBool('loggedIn', true);
     setState(() {
       authProblem = false;
@@ -30,6 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   void checkAuth(List<Chef> allChefs) {
     var name = chefNameController.text;
     var password = passwordController.text;
+    var manages = '';
 
     var present = false;
     for (var i = 0; i < allChefs.length; i++) {
@@ -37,12 +41,13 @@ class _LoginPageState extends State<LoginPage> {
       if (currentName == name) {
         if (allChefs[i].password == password) {
           present = true;
+          manages = allChefs[i].manages.toString();
           break;
         }
       }
     }
     if (present) {
-      moveToOrders();
+      moveToOrders(manages);
     } else {
       setState(() {
         authProblem = true;

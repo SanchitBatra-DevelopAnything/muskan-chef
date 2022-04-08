@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
         loadedChefs.add(Chef(
             chefName: chefData['chefName'],
             chefId: chefId,
+            manages: chefData['manages'],
             password: chefData['password']));
       });
       setState(() {
