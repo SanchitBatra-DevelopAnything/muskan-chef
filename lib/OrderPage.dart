@@ -153,13 +153,17 @@ class _OrderPageState extends State<OrderPage> {
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
-            : Center(
-                child: FlatButton(
-                  child: Text('See items'),
-                  onPressed: () {
-                    formBiforcatedItemsList();
-                  },
-                ),
-              ));
+            : ListView.builder(
+                itemCount: biforcatedItemsList.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(
+                      biforcatedItemsList[index].item.toString(),
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    trailing:
+                        Text(biforcatedItemsList[index].quantity.toString()),
+                  );
+                }));
   }
 }
