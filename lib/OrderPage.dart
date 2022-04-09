@@ -18,6 +18,9 @@ class _OrderPageState extends State<OrderPage> {
   List<Order> todaysOrders = [];
   var date = DateTime.now().toString().split(" ")[0];
 
+  List<dynamic> allItems = [];
+  List<dynamic> biforcatedItemsList = [];
+
   Future<void> fetchTodayOrders() async {
     var todaysDate = DateTime.now();
     var year = todaysDate.year.toString();
@@ -77,9 +80,27 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   void logout(BuildContext ctx) async {
+    biforcatedItemsList = [];
     var shared = await SharedPreferences.getInstance();
     shared.clear();
     Navigator.of(ctx).pushReplacementNamed('/');
+  }
+
+  void formBiforcatedItemsList() async {
+    var shared = await SharedPreferences.getInstance();
+    var categoryManaged = shared.get('manages');
+    for (var i = 0; i < todaysOrders.length; i++) {
+      for (var j = 0; j < todaysOrders[i].items!.length; j++) {
+        if (todaysOrders[i]
+                .items![j]['CategoryName']
+                .toString()
+                .toLowerCase() ==
+            categoryManaged.toString().toLowerCase()) {
+          biforcatedItemsList.add(todaysOrders[i].items![j]);
+        }
+      }
+    }
+    print("bb" + biforcatedItemsList[0]);
   }
 
   @override
@@ -110,12 +131,12 @@ class _OrderPageState extends State<OrderPage> {
           ],
         ),
         body: isLoading
-            ? CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator())
             : Center(
                 child: FlatButton(
                   child: Text('See items'),
                   onPressed: () {
-                    print(todaysOrders[0].items![0]['CategoryName']);
+                    formBiforcatedItemsList();
                   },
                 ),
               ));

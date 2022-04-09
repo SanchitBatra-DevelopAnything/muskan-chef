@@ -6,7 +6,7 @@ class Order {
   String? orderTime;
   String? orderedBy;
   String? shopAddress;
-  double? totalPrice;
+  int? totalPrice;
   String? orderId;
 
   Order(
