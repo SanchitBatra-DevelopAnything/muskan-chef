@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
     var present = false;
     for (var i = 0; i < allChefs.length; i++) {
       var currentName = allChefs[i].chefName;
-      if (currentName == name) {
+      if (currentName!.toLowerCase() == name.toLowerCase()) {
         if (allChefs[i].password == password) {
           present = true;
           manages = allChefs[i].manages.toString();
