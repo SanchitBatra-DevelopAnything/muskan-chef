@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:muskan_chef_app/item.dart';
 import 'dart:convert';
 
 import 'package:muskan_chef_app/order.dart';
@@ -17,9 +18,7 @@ class _OrderPageState extends State<OrderPage> {
   var ordersLoaded = false;
   List<Order> todaysOrders = [];
   var date = DateTime.now().toString().split(" ")[0];
-
-  List<dynamic> allItems = [];
-  List<dynamic> biforcatedItemsList = [];
+  List<Item> biforcatedItemsList = [];
 
   Future<void> fetchTodayOrders() async {
     var todaysDate = DateTime.now();
@@ -86,21 +85,37 @@ class _OrderPageState extends State<OrderPage> {
     Navigator.of(ctx).pushReplacementNamed('/');
   }
 
+  Item formItem(itemObject) {
+    Item item = Item(
+        CategoryKey: itemObject["CategoryKey"],
+        CategoryName: itemObject["CategoryName"],
+        yetToPrepare: itemObject["yetToPrepare"],
+        quantity: itemObject["quantity"],
+        item: itemObject["item"],
+        itemKey: itemObject["itemKey"],
+        price: itemObject["price"],
+        status: itemObject["status"],
+        subcategoryKey: itemObject["subcategoryKey"],
+        weight: itemObject["weight"]);
+    return item;
+  }
+
   void formBiforcatedItemsList() async {
     var shared = await SharedPreferences.getInstance();
     var categoryManaged = shared.get('manages');
     for (var i = 0; i < todaysOrders.length; i++) {
       for (var j = 0; j < todaysOrders[i].items!.length; j++) {
         if (todaysOrders[i]
-                .items![j]['CategoryName']
+                .items![j]["CategoryName"]
                 .toString()
                 .toLowerCase() ==
             categoryManaged.toString().toLowerCase()) {
-          biforcatedItemsList.add(todaysOrders[i].items![j]);
+          var itemObject = todaysOrders[i].items![j];
+          Item item = formItem(itemObject);
+          biforcatedItemsList.add(item);
         }
       }
     }
-    print("bb" + biforcatedItemsList[0]);
   }
 
   @override
