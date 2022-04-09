@@ -17,8 +17,9 @@ class _OrderPageState extends State<OrderPage> {
   var isLoading = false;
   var ordersLoaded = false;
   List<Order> todaysOrders = [];
-  var date = DateTime.now().toString().split(" ")[0];
   List<Item> biforcatedItemsList = [];
+  var date = DateTime.now().toString().split(" ")[0];
+  String managedCategory = '';
 
   Future<void> fetchTodayOrders() async {
     var todaysDate = DateTime.now();
@@ -79,7 +80,6 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   void logout(BuildContext ctx) async {
-    biforcatedItemsList = [];
     var shared = await SharedPreferences.getInstance();
     shared.clear();
     Navigator.of(ctx).pushReplacementNamed('/');
@@ -100,7 +100,8 @@ class _OrderPageState extends State<OrderPage> {
     return item;
   }
 
-  void formBiforcatedItemsList() async {
+  Future<List<Item>> formBiforcatedItemsList() async {
+    List<Item> requiredItemsList = [];
     var shared = await SharedPreferences.getInstance();
     var categoryManaged = shared.get('manages');
     for (var i = 0; i < todaysOrders.length; i++) {
@@ -112,10 +113,11 @@ class _OrderPageState extends State<OrderPage> {
             categoryManaged.toString().toLowerCase()) {
           var itemObject = todaysOrders[i].items![j];
           Item item = formItem(itemObject);
-          biforcatedItemsList.add(item);
+          requiredItemsList.add(item);
         }
       }
     }
+    return requiredItemsList;
   }
 
   @override
@@ -124,9 +126,13 @@ class _OrderPageState extends State<OrderPage> {
     setState(() {
       isLoading = true;
     });
+
     fetchTodayOrders().then((_) {
-      setState(() {
-        isLoading = false;
+      formBiforcatedItemsList().then((itemlist) {
+        setState(() {
+          biforcatedItemsList = itemlist;
+          isLoading = false;
+        });
       });
     });
     super.initState();
