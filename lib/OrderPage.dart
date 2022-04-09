@@ -51,11 +51,11 @@ class _OrderPageState extends State<OrderPage> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(
-            'Internet :(',
+            'Issue!',
             style: TextStyle(color: Colors.red[300]),
           ),
           content: Text(
-            'please internet area me jaake try kijiye.',
+            error.toString(),
             style: TextStyle(color: Colors.red[600]),
           ),
           actions: <Widget>[
@@ -83,6 +83,20 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      isLoading = true;
+    });
+    fetchTodayOrders().then((_) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -95,8 +109,15 @@ class _OrderPageState extends State<OrderPage> {
                 icon: Icon(Icons.login))
           ],
         ),
-        body: Center(
-          child: Text('Welcome to orders..'),
-        ));
+        body: isLoading
+            ? CircularProgressIndicator()
+            : Center(
+                child: FlatButton(
+                  child: Text('See items'),
+                  onPressed: () {
+                    print(todaysOrders[0].items![0]['CategoryName']);
+                  },
+                ),
+              ));
   }
 }

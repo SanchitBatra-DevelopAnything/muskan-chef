@@ -43,11 +43,11 @@ class _HomePageState extends State<HomePage> {
         context: context,
         builder: (ctx) => AlertDialog(
           title: Text(
-            'Internet :(',
+            'Issue!',
             style: TextStyle(color: Colors.red[300]),
           ),
           content: Text(
-            'please internet area me jaake try kijiye.',
+            error.toString(),
             style: TextStyle(color: Colors.red[600]),
           ),
           actions: <Widget>[
