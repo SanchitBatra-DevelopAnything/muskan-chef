@@ -20,6 +20,8 @@ class _OrderPageState extends State<OrderPage> {
   List<Item> biforcatedItemsList = [];
   var date = DateTime.now().toString().split(" ")[0];
   String managedCategory = '';
+  bool zeroOrders = false;
+  bool noManagedItems = true;
 
   Future<void> fetchTodayOrders() async {
     var todaysDate = DateTime.now();
@@ -33,22 +35,30 @@ class _OrderPageState extends State<OrderPage> {
             '.json');
     try {
       final response = await http.get(url);
-      var extractedData = json.decode(response.body) as Map<String, dynamic>;
-      final List<Order> loadedOrders = [];
-      extractedData.forEach((processedOrderId, OrderData) {
-        loadedOrders.add(Order(
-          items: OrderData['items'],
-          orderId: OrderData['orderId'],
-          orderedBy: OrderData['orderedBy'],
-          shopAddress: OrderData['shopAddress'],
-          orderTime: OrderData['orderTime'],
-          totalPrice: OrderData['totalPrice'],
-        ));
-      });
-      setState(() {
-        todaysOrders = loadedOrders.reversed.toList();
-        ordersLoaded = true;
-      });
+      if (response.body == "null") {
+        setState(() {
+          zeroOrders = true;
+          ordersLoaded = true;
+        });
+      }
+      if (!zeroOrders) {
+        var extractedData = json.decode(response.body) as Map<String, dynamic>;
+        final List<Order> loadedOrders = [];
+        extractedData.forEach((processedOrderId, OrderData) {
+          loadedOrders.add(Order(
+            items: OrderData['items'],
+            orderId: OrderData['orderId'],
+            orderedBy: OrderData['orderedBy'],
+            shopAddress: OrderData['shopAddress'],
+            orderTime: OrderData['orderTime'],
+            totalPrice: OrderData['totalPrice'],
+          ));
+        });
+        setState(() {
+          todaysOrders = loadedOrders.reversed.toList();
+          ordersLoaded = true;
+        });
+      }
     } catch (error) {
       showDialog(
         context: context,
@@ -117,6 +127,17 @@ class _OrderPageState extends State<OrderPage> {
         }
       }
     }
+    if (requiredItemsList.length == 0) {
+      setState(() {
+        noManagedItems = true;
+        managedCategory = categoryManaged.toString().toLowerCase();
+      });
+    } else {
+      setState(() {
+        noManagedItems = false;
+        managedCategory = categoryManaged.toString().toLowerCase();
+      });
+    }
     return requiredItemsList;
   }
 
@@ -145,6 +166,10 @@ class _OrderPageState extends State<OrderPage> {
           title: Text('Orders for ' + date),
           actions: [
             IconButton(
+              icon: Icon(Icons.done_all),
+              onPressed: () {},
+            ),
+            IconButton(
                 onPressed: () {
                   logout(context);
                 },
@@ -153,17 +178,39 @@ class _OrderPageState extends State<OrderPage> {
         ),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                itemCount: biforcatedItemsList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      biforcatedItemsList[index].item.toString(),
-                      style: TextStyle(fontWeight: FontWeight.bold),
+            : (ordersLoaded && zeroOrders)
+                ? Center(
+                    child: Text(
+                      'Orders not processed/received by admins',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
-                    trailing:
-                        Text(biforcatedItemsList[index].quantity.toString()),
-                  );
-                }));
+                  )
+                : (ordersLoaded && noManagedItems)
+                    ? Center(
+                        child: Text(
+                          'No ${managedCategory} items today yet.',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      )
+                    : ListView.builder(
+                        itemCount: biforcatedItemsList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                              biforcatedItemsList[index]
+                                  .item
+                                  .toString()
+                                  .toUpperCase(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            trailing: Text(
+                              biforcatedItemsList[index]
+                                  .yetToPrepare
+                                  .toString(),
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          );
+                        }));
   }
 }
