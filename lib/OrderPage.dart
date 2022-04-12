@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:muskan_chef_app/item.dart';
@@ -138,7 +140,28 @@ class _OrderPageState extends State<OrderPage> {
         managedCategory = categoryManaged.toString().toLowerCase();
       });
     }
+    requiredItemsList = clubItemsTogether(requiredItemsList);
     return requiredItemsList;
+  }
+
+  List<Item> clubItemsTogether(List<Item> currentList) {
+    LinkedHashMap map = LinkedHashMap<String, int>();
+    for (var i = 0; i < currentList.length; i++) {
+      Item currentItem = currentList[i];
+      if (map.containsKey(currentItem.item!.toUpperCase())) {
+        map.update(currentItem.item!.toUpperCase(),
+            (oldValue) => (currentItem.yetToPrepare + oldValue).toInt());
+      } else {
+        map.putIfAbsent(
+            currentItem.item!.toUpperCase(), () => currentItem.yetToPrepare);
+      }
+    }
+
+    List<Item> kaamKiList = [];
+    map.forEach((key, value) {
+      kaamKiList.add(Item(yetToPrepare: value, item: key));
+    });
+    return kaamKiList;
   }
 
   @override
@@ -181,7 +204,7 @@ class _OrderPageState extends State<OrderPage> {
             : (ordersLoaded && zeroOrders)
                 ? Center(
                     child: Text(
-                      'Orders not processed/received by admins',
+                      'No orders',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),

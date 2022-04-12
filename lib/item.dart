@@ -8,7 +8,7 @@ class Item {
   int? quantity;
   String? status;
   String? subcategoryKey;
-  int? yetToPrepare;
+  int yetToPrepare;
 
   Item(
       {this.CategoryKey,
@@ -20,5 +20,5 @@ class Item {
       this.status,
       this.subcategoryKey,
       this.weight,
-      this.yetToPrepare});
+      this.yetToPrepare = 0});
 }
