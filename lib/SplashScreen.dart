@@ -111,29 +111,72 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: isLoading
-            ? const Center(
-                child: const CircularProgressIndicator(),
-              )
-            : dataLoaded
-                ? Center(
-                    child: RaisedButton(
-                      child: Text('SEE ORDERS..',
-                          style: const TextStyle(
-                              fontSize: 35, color: Colors.white)),
-                      color: Colors.red,
-                      onPressed: () {
-                        startTheApp(context);
-                      },
-                    ),
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Image.asset(
+              'assets/muskan.jpeg',
+              height: 120,
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Welcome to chef app',
+              style: TextStyle(
+                  fontSize: 20, fontStyle: FontStyle.italic, color: Colors.red),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            isLoading
+                ? CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                   )
-                : Center(
-                    child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Bad Internet :( Please try again',
-                      style: TextStyle(fontSize: 30),
-                    ),
-                  )));
+                : dataLoaded
+                    ? Center(
+                        child: RaisedButton(
+                          child: Text('SEE ORDERS..',
+                              style: const TextStyle(
+                                  fontSize: 35, color: Colors.white)),
+                          color: Colors.red,
+                          onPressed: () {
+                            startTheApp(context);
+                          },
+                        ),
+                      )
+                    : Center(
+                        child: Container(
+                        padding: EdgeInsets.all(10),
+                        child: Text(
+                          'Bad Internet :( Please try again',
+                          style: TextStyle(fontSize: 30),
+                        ),
+                      ))
+          ]),
+        ));
+    // return Scaffold(
+    //     body: isLoading
+    //         ? const Center(
+    //             child: const CircularProgressIndicator(),
+    //           )
+    //         : dataLoaded
+    //             ? Center(
+    //                 child: RaisedButton(
+    //                   child: Text('SEE ORDERS..',
+    //                       style: const TextStyle(
+    //                           fontSize: 35, color: Colors.white)),
+    //                   color: Colors.red,
+    //                   onPressed: () {
+    //                     startTheApp(context);
+    //                   },
+    //                 ),
+    //               )
+    //             : Center(
+    //                 child: Container(
+    //                 padding: EdgeInsets.all(10),
+    //                 child: Text(
+    //                   'Bad Internet :( Please try again',
+    //                   style: TextStyle(fontSize: 30),
+    //                 ),
+    //               )));
   }
 }
