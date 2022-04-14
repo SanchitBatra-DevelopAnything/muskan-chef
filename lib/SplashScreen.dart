@@ -75,21 +75,25 @@ class _HomePageState extends State<HomePage> {
       moveToLogin = true;
       Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
     } else {
-      //check if still a valid login , password badla to nahi?
+      //check if still a valid login , access hataa to ni diya admin app se?
       var chef = sharedPreferences.get('chefName');
       var oldPassword = sharedPreferences.get('password');
+      var chefInDB = false;
       for (var i = 0; i < allChefs.length; i++) {
-        if (allChefs[i].chefName == chef &&
-            allChefs[i].password != oldPassword) {
-          moveToLogin = true;
-          sharedPreferences.clear();
-          Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
+        if (allChefs[i].chefName.toString().toLowerCase() ==
+            chef.toString().toLowerCase()) {
+          chefInDB = true;
           break;
         }
       }
+      if (!chefInDB) {
+        moveToLogin = true;
+        sharedPreferences.clear();
+        Navigator.of(ctx).pushReplacementNamed('/login', arguments: allChefs);
+      }
     }
     if (!moveToLogin) {
-      Navigator.of(context).pushReplacementNamed('/orders');
+      Navigator.of(ctx).pushReplacementNamed('/orders');
     }
   }
 
