@@ -175,6 +175,22 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
+  void refreshAction() async {
+    setState(() {
+      isLoading = true;
+      zeroOrders = false;
+      noManagedItems = true;
+    });
+    return fetchTodayOrders().then((_) {
+      formBiforcatedItemsList().then((itemlist) {
+        setState(() {
+          biforcatedItemsList = itemlist;
+          isLoading = false;
+        });
+      });
+    });
+  }
+
   Future<void> preparedItems() async {
     setState(() {
       isLoading = true;
@@ -201,18 +217,47 @@ class _OrderPageState extends State<OrderPage> {
                   orderKey +
                   "/items/$j.json");
 
-          await http.patch(url, body: json.encode(items[j]));
+          try {
+            await http.patch(url, body: json.encode(items[j]));
+          } catch (error) {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: Text(
+                  'Cant update now!',
+                  style: TextStyle(color: Colors.red[300]),
+                ),
+                content: Text(
+                  error.toString(),
+                  style: TextStyle(color: Colors.red[600]),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: const Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  )
+                ],
+              ),
+            ).then((_) {
+              setState(() {
+                isLoading = false;
+                ordersLoaded = false;
+              });
+            });
+          }
         }
       }
-      fetchTodayOrders().then((_) {
-        formBiforcatedItemsList().then((itemlist) {
-          setState(() {
-            biforcatedItemsList = itemlist;
-            isLoading = false;
-          });
+    }
+    fetchTodayOrders().then((_) {
+      formBiforcatedItemsList().then((itemlist) {
+        setState(() {
+          biforcatedItemsList = itemlist;
+          isLoading = false;
         });
       });
-    }
+    });
   }
 
   @override
@@ -239,6 +284,7 @@ class _OrderPageState extends State<OrderPage> {
         appBar: AppBar(
           title: Text('Orders for ' + date),
           actions: [
+            IconButton(onPressed: refreshAction, icon: Icon(Icons.refresh)),
             IconButton(
               icon: Icon(Icons.done_all),
               onPressed: preparedItems,
@@ -251,9 +297,7 @@ class _OrderPageState extends State<OrderPage> {
           ],
         ),
         body: isLoading
-            ? RefreshIndicator(
-                onRefresh: refreshOrders,
-                child: Center(child: CircularProgressIndicator()))
+            ? Center(child: CircularProgressIndicator())
             : (ordersLoaded && zeroOrders)
                 ? RefreshIndicator(
                     onRefresh: refreshOrders,
@@ -283,7 +327,15 @@ class _OrderPageState extends State<OrderPage> {
                                       .item
                                       .toString()
                                       .toUpperCase(),
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                  style: biforcatedItemsList[index]
+                                              .yetToPrepare
+                                              .toString() ==
+                                          "0"
+                                      ? TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          decoration:
+                                              TextDecoration.lineThrough)
+                                      : TextStyle(fontWeight: FontWeight.bold),
                                 ),
                                 trailing: Text(
                                   biforcatedItemsList[index]

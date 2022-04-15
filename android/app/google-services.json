@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1009765979767",
+    "project_id": "muskanchef",
+    "storage_bucket": "muskanchef.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009765979767:android:5a836f8934d9c3839b5872",
+        "android_client_info": {
+          "package_name": "com.example.muskan_chef_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009765979767-5g4gli55bmovmuf13cgvu11aaca3p7nf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.muskan_chef_app",
+            "certificate_hash": "9bc12af08c1522822114db5898382de6ce2c0d46"
+          }
+        },
+        {
+          "client_id": "1009765979767-591b0nfhke78u9vq4l1vdtigbaav9ng0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDkpKGfLu0fu4Bld1of_gXmwMMBJ4pf_so"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009765979767-591b0nfhke78u9vq4l1vdtigbaav9ng0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
