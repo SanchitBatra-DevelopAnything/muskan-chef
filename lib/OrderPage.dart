@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:muskan_chef_app/MainDrawer.dart';
 import 'package:muskan_chef_app/item.dart';
 import 'dart:convert';
 
@@ -296,6 +297,7 @@ class _OrderPageState extends State<OrderPage> {
                 icon: Icon(Icons.login))
           ],
         ),
+        drawer: MainDrawer(),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (ordersLoaded && zeroOrders)
