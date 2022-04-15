@@ -282,7 +282,7 @@ class _OrderPageState extends State<OrderPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Orders for ' + date),
+          title: Text(date),
           actions: [
             IconButton(onPressed: refreshAction, icon: Icon(Icons.refresh)),
             IconButton(
