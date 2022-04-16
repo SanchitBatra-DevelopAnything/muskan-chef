@@ -261,6 +261,37 @@ class _OrderPageState extends State<OrderPage> {
     });
   }
 
+  showLogoutDialog(BuildContext ctx) {
+    showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text(
+                'LOGOUT?',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              content: Text(
+                'Yes will log you out from the application.',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: const Text('Yes'),
+                  onPressed: () {
+                    logout(ctx);
+                  },
+                ),
+                FlatButton(
+                  child: const Text('No'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            ));
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -292,7 +323,7 @@ class _OrderPageState extends State<OrderPage> {
             ),
             IconButton(
                 onPressed: () {
-                  logout(context);
+                  showLogoutDialog(context);
                 },
                 icon: Icon(Icons.login))
           ],
