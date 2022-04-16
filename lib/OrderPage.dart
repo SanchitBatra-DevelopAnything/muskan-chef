@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:muskan_chef_app/MainDrawer.dart';
@@ -25,6 +26,32 @@ class _OrderPageState extends State<OrderPage> {
   String managedCategory = '';
   bool zeroOrders = false;
   bool noManagedItems = true;
+  String deviceTokenToSendPushNotification = "";
+
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+
+    var shared = await SharedPreferences.getInstance();
+    var chef = shared.get('chefName');
+    if (chef.toString() == "null") {
+      print("Token Value of unknown user $deviceTokenToSendPushNotification");
+    } else {
+      var url = Uri.parse(
+          'https://muskan-admin-app-default-rtdb.firebaseio.com/chefNotificationTokens/' +
+              chef.toString().toUpperCase() +
+              '.json');
+      try {
+        await http.patch(url,
+            body:
+                json.encode({"chefToken": deviceTokenToSendPushNotification}));
+      } catch (error) {
+        print("UNABLE TO UPDATE NOTIFICATION TOKEN");
+        print(error);
+      }
+    }
+  }
 
   Future<void> fetchTodayOrders() async {
     var todaysDate = DateTime.now();
@@ -321,6 +348,7 @@ class _OrderPageState extends State<OrderPage> {
 
   @override
   Widget build(BuildContext context) {
+    getDeviceTokenToSendNotification();
     return Scaffold(
         appBar: AppBar(
           title: Text(date),
