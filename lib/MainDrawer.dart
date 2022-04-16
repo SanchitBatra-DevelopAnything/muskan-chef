@@ -32,7 +32,7 @@ class MainDrawer extends StatelessWidget {
             height: 30,
           ),
           Container(
-            child: Image.asset('assets/muskan.jpeg', fit: BoxFit.cover),
+            child: Image.asset('assets/muskan.png', fit: BoxFit.cover),
             width: double.infinity,
           ),
           SizedBox(

@@ -119,7 +119,7 @@ class _HomePageState extends State<HomePage> {
         body: Center(
           child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
             Image.asset(
-              'assets/muskan.jpeg',
+              'assets/muskan.png',
               height: 120,
             ),
             SizedBox(height: 20),

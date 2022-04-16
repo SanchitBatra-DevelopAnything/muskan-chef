@@ -69,7 +69,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 120,
               ),
-              Image.asset('assets/muskan.jpeg'),
+              Image.asset('assets/muskan.png'),
               const SizedBox(
                 height: 30,
               ),
