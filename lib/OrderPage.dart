@@ -277,13 +277,21 @@ class _OrderPageState extends State<OrderPage> {
               ),
               actions: <Widget>[
                 FlatButton(
-                  child: const Text('Yes'),
+                  child: const Text(
+                    'Yes',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.red,
                   onPressed: () {
                     logout(ctx);
                   },
                 ),
                 FlatButton(
-                  child: const Text('No'),
+                  child: const Text(
+                    'No',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.red,
                   onPressed: () {
                     Navigator.of(context).pop();
                   },

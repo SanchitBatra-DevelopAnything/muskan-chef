@@ -29,7 +29,7 @@ class MainDrawer extends StatelessWidget {
       child: Column(
         children: <Widget>[
           SizedBox(
-            height: 25,
+            height: 30,
           ),
           Container(
             child: Image.asset('assets/muskan.jpeg', fit: BoxFit.cover),
@@ -38,12 +38,15 @@ class MainDrawer extends StatelessWidget {
           SizedBox(
             height: 25,
           ),
+          Divider(),
           buildTile('Normal Orders', Icons.breakfast_dining, () {
             Navigator.of(context).pushReplacementNamed('/orders');
           }),
+          Divider(),
           buildTile('Custom Orders (coming soon)', Icons.cake, () {
             print("Coming Soon , Cant navigate now!");
           }),
+          Divider(),
         ],
       ),
     );
