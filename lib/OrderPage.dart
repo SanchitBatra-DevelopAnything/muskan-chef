@@ -95,6 +95,7 @@ class _OrderPageState extends State<OrderPage> {
   void logout(BuildContext ctx) async {
     var shared = await SharedPreferences.getInstance();
     shared.clear();
+    Navigator.of(ctx).pop();
     Navigator.of(ctx).pushReplacementNamed('/');
   }
 
@@ -271,7 +272,7 @@ class _OrderPageState extends State<OrderPage> {
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
               content: Text(
-                'Yes will log you out from the application.',
+                'Exit from the application?',
                 style:
                     TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),

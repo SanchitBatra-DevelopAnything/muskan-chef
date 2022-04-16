@@ -13,6 +13,7 @@ class _LoginPageState extends State<LoginPage> {
   var chefNameController = TextEditingController();
   var passwordController = TextEditingController();
   var authProblem = false;
+  var _isObscure = true;
 
   void moveToOrders(String manages) async {
     final SharedPreferences sharedPreferences =
@@ -92,12 +93,22 @@ class _LoginPageState extends State<LoginPage> {
             height: 20,
           ),
           TextField(
-            obscureText: true,
+            obscureText: _isObscure,
             controller: passwordController,
             decoration: InputDecoration(
                 labelText: "Password",
                 filled: true,
-                labelStyle: const TextStyle(fontSize: 25)),
+                labelStyle: const TextStyle(fontSize: 25),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isObscure ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscure = !_isObscure;
+                    });
+                  },
+                )),
           ),
           const SizedBox(
             height: 20,
