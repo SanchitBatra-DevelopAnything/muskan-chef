@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
+import 'package:muskan_chef_app/shops.dart';
 import 'LoginPage.dart';
 import 'notificationservice/local_notification_service.dart';
 
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
           '/': (context) => HomePage(),
           '/login': (context) => LoginPage(),
           '/orders': (context) => OrderPage(),
+          '/shops': (context) => ShopsPage(),
         });
   }
 }

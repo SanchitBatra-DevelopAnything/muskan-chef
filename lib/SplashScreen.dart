@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
         loadedChefs.add(Chef(
             chefName: chefData['chefName'],
             chefId: chefId,
-            manages: chefData['manages'],
+            manages: List.from(chefData['manages']),
             password: chefData['password']));
       });
       setState(() {
@@ -96,6 +96,13 @@ class _HomePageState extends State<HomePage> {
       }
     }
     if (!moveToLogin) {
+      List<String> manages = sharedPreferences.getStringList('manages')!;
+      if (manages.contains("CAKES & PASTRIES") ||
+          manages.contains("PASTRIES") ||
+          manages.contains("ICE CREAM")) {
+        Navigator.of(ctx).pushReplacementNamed('/shops');
+        return;
+      }
       Navigator.of(ctx).pushReplacementNamed('/orders');
     }
   }

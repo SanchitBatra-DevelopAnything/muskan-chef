@@ -15,18 +15,30 @@ class _LoginPageState extends State<LoginPage> {
   var authProblem = false;
   var _isObscure = true;
 
-  void moveToOrders(String manages) async {
+  void moveToOrders(List<dynamic?> manages) async {
+    List<String> categoriesManaged = [];
+
+    for (var i = 0; i < manages.length; i++) {
+      categoriesManaged.add(manages[i].toString().toUpperCase());
+    }
+
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();
     sharedPreferences.setString('chefName', chefNameController.text);
     sharedPreferences.setString('password', passwordController.text);
-    print("Setting manages = " + manages);
-    sharedPreferences.setString('manages', manages);
+    sharedPreferences.setStringList('manages', categoriesManaged);
 
     sharedPreferences.setBool('loggedIn', true);
     setState(() {
       authProblem = false;
     });
+
+    if (categoriesManaged.contains("ICE CREAM") ||
+        categoriesManaged.contains("PASTRIES") ||
+        categoriesManaged.contains("CAKES & PASTRIES")) {
+      Navigator.of(context).pushReplacementNamed('/shops');
+      return;
+    }
 
     Navigator.of(context).pushReplacementNamed('/orders');
   }
@@ -34,7 +46,7 @@ class _LoginPageState extends State<LoginPage> {
   void checkAuth(List<Chef> allChefs) {
     var name = chefNameController.text;
     var password = passwordController.text;
-    var manages = '';
+    List<dynamic>? manages = [];
 
     var present = false;
     for (var i = 0; i < allChefs.length; i++) {
@@ -42,13 +54,13 @@ class _LoginPageState extends State<LoginPage> {
       if (currentName!.toLowerCase() == name.toLowerCase()) {
         if (allChefs[i].password == password) {
           present = true;
-          manages = allChefs[i].manages.toString();
+          manages = allChefs[i].manages;
           break;
         }
       }
     }
     if (present) {
-      moveToOrders(manages);
+      moveToOrders(manages!);
     } else {
       setState(() {
         authProblem = true;
