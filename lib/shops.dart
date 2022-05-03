@@ -250,7 +250,7 @@ class _ShopsPageState extends State<ShopsPage> {
                 icon: Icon(Icons.login))
           ],
         ),
-        drawer: MainDrawer(),
+        drawer: MainDrawer(special: true),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (ordersLoaded && zeroOrders)

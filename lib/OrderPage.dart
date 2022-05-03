@@ -388,7 +388,9 @@ class _OrderPageState extends State<OrderPage> {
                 icon: Icon(Icons.login))
           ],
         ),
-        drawer: MainDrawer(),
+        drawer: widget.shopName == "all"
+            ? MainDrawer(special: false)
+            : MainDrawer(special: true),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (ordersLoaded && zeroOrders)

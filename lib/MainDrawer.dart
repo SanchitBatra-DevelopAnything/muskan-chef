@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class MainDrawer extends StatelessWidget {
-  const MainDrawer({Key? key}) : super(key: key);
+  final bool special;
+  const MainDrawer({Key? key, required this.special}) : super(key: key);
 
   Widget buildTile(String title, IconData icon, VoidCallback tapHandler) {
     return ListTile(
@@ -43,6 +44,12 @@ class MainDrawer extends StatelessWidget {
             Navigator.of(context)
                 .pushReplacementNamed('/orders', arguments: "all");
           }),
+          Divider(),
+          special
+              ? buildTile("SHOPS", Icons.shop_2_rounded, () {
+                  Navigator.of(context).pushReplacementNamed('/shops');
+                })
+              : SizedBox(height: 0),
           Divider(),
           buildTile('Custom Orders (coming soon)', Icons.cake, () {
             print("Coming Soon , Cant navigate now!");
