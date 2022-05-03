@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.of(ctx).pushReplacementNamed('/shops');
         return;
       }
-      Navigator.of(ctx).pushReplacementNamed('/orders');
+      Navigator.of(ctx).pushReplacementNamed('/orders', arguments: "all");
     }
   }
 

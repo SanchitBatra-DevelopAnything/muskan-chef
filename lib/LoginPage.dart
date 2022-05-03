@@ -3,7 +3,8 @@ import 'package:muskan_chef_app/chef.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  final List<Chef> chefList;
+  const LoginPage({Key? key, required this.chefList}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -14,6 +15,8 @@ class _LoginPageState extends State<LoginPage> {
   var passwordController = TextEditingController();
   var authProblem = false;
   var _isObscure = true;
+
+  get chefList => null;
 
   void moveToOrders(List<dynamic?> manages) async {
     List<String> categoriesManaged = [];
@@ -40,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    Navigator.of(context).pushReplacementNamed('/orders');
+    Navigator.of(context).pushReplacementNamed('/orders', arguments: "all");
   }
 
   void checkAuth(List<Chef> allChefs) {
@@ -70,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final routeArgs = ModalRoute.of(context)!.settings.arguments as List<Chef>;
+    // final routeArgs = ModalRoute.of(context)!.settings.arguments as List<Chef>;
     return Scaffold(
         body: SafeArea(
       child: ListView(
@@ -127,7 +130,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           RaisedButton(
             onPressed: () {
-              checkAuth(routeArgs);
+              checkAuth(widget.chefList);
             },
             child: const Text(
               'Login',

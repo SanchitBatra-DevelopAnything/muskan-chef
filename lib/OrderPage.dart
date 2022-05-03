@@ -11,7 +11,8 @@ import 'package:muskan_chef_app/order.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OrderPage extends StatefulWidget {
-  const OrderPage({Key? key}) : super(key: key);
+  final String shopName;
+  const OrderPage({Key? key, required this.shopName}) : super(key: key);
 
   @override
   _OrderPageState createState() => _OrderPageState();

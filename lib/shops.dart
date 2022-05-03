@@ -231,8 +231,8 @@ class _ShopsPageState extends State<ShopsPage> {
     });
   }
 
-  void moveToOrders(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/orders');
+  void moveToOrders(BuildContext context, String shopName) {
+    Navigator.of(context).pushReplacementNamed('/orders', arguments: shopName);
   }
 
   @override
@@ -276,7 +276,8 @@ class _ShopsPageState extends State<ShopsPage> {
                             itemCount: shops.length,
                             itemBuilder: (context, index) {
                               return GestureDetector(
-                                onTap: () => moveToOrders(context),
+                                onTap: () =>
+                                    moveToOrders(context, shops[index]),
                                 child: Card(
                                   elevation: 12.0,
                                   child: ListTile(
