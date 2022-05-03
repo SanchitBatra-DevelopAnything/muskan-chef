@@ -23,7 +23,7 @@ class _OrderPageState extends State<OrderPage> {
   List<Order> todaysOrders = [];
   List<Item> biforcatedItemsList = [];
   var date = DateTime.now().toString().split(" ")[0];
-  String managedCategory = '';
+  List<String> managedCategories = [];
   bool zeroOrders = false;
   bool noManagedItems = true;
   String deviceTokenToSendPushNotification = "";
@@ -146,29 +146,38 @@ class _OrderPageState extends State<OrderPage> {
   Future<List<Item>> formBiforcatedItemsList() async {
     List<Item> requiredItemsList = [];
     var shared = await SharedPreferences.getInstance();
-    var categoryManaged = shared.get('manages');
+    var categoriesManaged = shared.getStringList('manages');
     for (var i = 0; i < todaysOrders.length; i++) {
       for (var j = 0; j < todaysOrders[i].items!.length; j++) {
-        if (todaysOrders[i]
-                .items![j]["CategoryName"]
-                .toString()
-                .toLowerCase() ==
-            categoryManaged.toString().toLowerCase()) {
-          var itemObject = todaysOrders[i].items![j];
-          Item item = formItem(itemObject);
-          requiredItemsList.add(item);
-        }
+        for (var k = 0; k < categoriesManaged!.length; k++)
+          if (todaysOrders[i]
+                  .items![j]["CategoryName"]
+                  .toString()
+                  .toLowerCase() ==
+              categoriesManaged[k].toString().toLowerCase()) {
+            var itemObject = todaysOrders[i].items![j];
+            Item item = formItem(itemObject);
+            requiredItemsList.add(item);
+          }
       }
     }
     if (requiredItemsList.length == 0) {
       setState(() {
         noManagedItems = true;
-        managedCategory = categoryManaged.toString().toLowerCase();
+        managedCategories = categoriesManaged!
+            .map(
+              (e) => e.toString().toLowerCase(),
+            )
+            .toList();
       });
     } else {
       setState(() {
         noManagedItems = false;
-        managedCategory = categoryManaged.toString().toLowerCase();
+        managedCategories = categoriesManaged!
+            .map(
+              (e) => e.toString().toLowerCase(),
+            )
+            .toList();
       });
     }
     requiredItemsList = clubItemsTogether(requiredItemsList);
@@ -236,51 +245,54 @@ class _OrderPageState extends State<OrderPage> {
       List? items = currentOrder.items;
       String orderKey = currentOrder.orderId.toString();
       for (var j = 0; j < items!.length; j++) {
-        if (items[j]["CategoryName"].toString().toLowerCase() ==
-            managedCategory.toString().toLowerCase()) {
-          print(managedCategory + " is being managed");
-          //update here and then send to backend , only update the keys to be updated
-          items[j] = {'yetToPrepare': 0, 'status': "PREPARED"};
-          var url = Uri.parse(
-              'https://muskan-admin-app-default-rtdb.firebaseio.com/ProcessedShopOrders/' +
-                  date +
-                  "/" +
-                  orderKey +
-                  "/items/$j.json");
+        for (var k = 0; k < managedCategories.length; k++) {
+          if (items[j]["CategoryName"].toString().toLowerCase() ==
+              managedCategories[k].toString().toLowerCase()) {
+            print(managedCategories[k] + " is being managed");
+            //update here and then send to backend , only update the keys to be updated
+            items[j] = {'yetToPrepare': 0, 'status': "PREPARED"};
+            var url = Uri.parse(
+                'https://muskan-admin-app-default-rtdb.firebaseio.com/ProcessedShopOrders/' +
+                    date +
+                    "/" +
+                    orderKey +
+                    "/items/$j.json");
 
-          try {
-            await http.patch(url, body: json.encode(items[j]));
-          } catch (error) {
-            showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: Text(
-                  'Cant update now!',
-                  style: TextStyle(color: Colors.red[300]),
+            try {
+              await http.patch(url, body: json.encode(items[j]));
+            } catch (error) {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: Text(
+                    'Cant update now!',
+                    style: TextStyle(color: Colors.red[300]),
+                  ),
+                  content: Text(
+                    error.toString(),
+                    style: TextStyle(color: Colors.red[600]),
+                  ),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: const Text('Okay'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
                 ),
-                content: Text(
-                  error.toString(),
-                  style: TextStyle(color: Colors.red[600]),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: const Text('Okay'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  )
-                ],
-              ),
-            ).then((_) {
-              setState(() {
-                isLoading = false;
-                ordersLoaded = false;
+              ).then((_) {
+                setState(() {
+                  isLoading = false;
+                  ordersLoaded = false;
+                });
               });
-            });
+            }
           }
         }
       }
     }
+
     fetchTodayOrders().then((_) {
       formBiforcatedItemsList().then((itemlist) {
         setState(() {
@@ -384,7 +396,7 @@ class _OrderPageState extends State<OrderPage> {
                 : (ordersLoaded && noManagedItems)
                     ? Center(
                         child: Text(
-                          'No ${managedCategory} items today yet.',
+                          'No Orders for you today.',
                           style: TextStyle(fontSize: 20),
                         ),
                       )
