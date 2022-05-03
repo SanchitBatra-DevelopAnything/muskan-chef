@@ -171,6 +171,11 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> clearPreferences() async {
+    var sharedpref = await SharedPreferences.getInstance();
+    sharedpref.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,20 +192,23 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                   fontSize: 20, fontStyle: FontStyle.italic, color: Colors.red),
             ),
-            SizedBox(
-              height: 20,
+            SizedBox(height: 10),
+            RaisedButton(
+              onPressed: () => {clearPreferences()},
+              child: Text("CLEAR"),
             ),
+            SizedBox(height: 10),
             isLoading
                 ? CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.red),
                   )
                 : dataLoaded
                     ? Center(
-                        child: RaisedButton(
+                        child: ElevatedButton(
                           child: Text('SEE ORDERS..',
                               style: const TextStyle(
                                   fontSize: 35, color: Colors.white)),
-                          color: Colors.red,
+                          style: ElevatedButton.styleFrom(primary: Colors.red),
                           onPressed: () {
                             startTheApp(context);
                           },
