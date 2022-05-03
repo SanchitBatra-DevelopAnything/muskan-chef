@@ -9,6 +9,8 @@ class Item {
   String? status;
   String? subcategoryKey;
   int yetToPrepare;
+  String? cakeFlavour;
+  String? designCategory;
 
   Item(
       {this.CategoryKey,
@@ -20,5 +22,7 @@ class Item {
       this.status,
       this.subcategoryKey,
       this.weight,
+      this.cakeFlavour,
+      this.designCategory,
       this.yetToPrepare = 0});
 }

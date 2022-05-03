@@ -135,6 +135,8 @@ class _OrderPageState extends State<OrderPage> {
         item: itemObject["item"],
         itemKey: itemObject["itemKey"],
         price: itemObject["price"],
+        cakeFlavour: itemObject['cakeFlavour'],
+        designCategory: itemObject['designCategory'],
         status: itemObject["status"],
         subcategoryKey: itemObject["subcategoryKey"],
         weight: itemObject["weight"]);
