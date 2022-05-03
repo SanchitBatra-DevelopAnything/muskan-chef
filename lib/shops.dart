@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:muskan_chef_app/MainDrawer.dart';
 import 'package:muskan_chef_app/item.dart';
@@ -14,11 +18,31 @@ class ShopsPage extends StatefulWidget {
 }
 
 class _ShopsPageState extends State<ShopsPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    setState(() {
+      isLoading = true;
+    });
+
+    fetchTodayOrders().then((_) {
+      getShopsList().then((shoplist) {
+        setState(() {
+          shops = shoplist;
+          isLoading = false;
+        });
+      });
+    });
+    super.initState();
+  }
+
   var zeroOrders = false;
   var ordersLoaded = false;
   var isLoading = false;
+  List<String> managedCategories = [];
+  bool noManagedItems = true;
   List<Order> todaysOrders = [];
-  List<Item> biforcatedItemsList = [];
+  List<String> shops = [];
 
   showLogoutDialog(BuildContext ctx) {
     showDialog(
@@ -141,38 +165,136 @@ class _ShopsPageState extends State<ShopsPage> {
     }
   }
 
-  Item formItem(itemObject) {
-    Item item = Item(
-        CategoryKey: itemObject["CategoryKey"],
-        CategoryName: itemObject["CategoryName"],
-        yetToPrepare: itemObject["yetToPrepare"],
-        quantity: itemObject["quantity"],
-        item: itemObject["item"],
-        itemKey: itemObject["itemKey"],
-        price: itemObject["price"],
-        cakeFlavour: itemObject['cakeFlavour'],
-        designCategory: itemObject['designCategory'],
-        status: itemObject["status"],
-        subcategoryKey: itemObject["subcategoryKey"],
-        weight: itemObject["weight"]);
-    return item;
+  Future<List<String>> getShopsList() async {
+    List<String> shopsForTodayOrders = [];
+    var shared = await SharedPreferences.getInstance();
+    var categoriesManaged = shared.getStringList('manages');
+    for (var i = 0; i < todaysOrders.length; i++) {
+      for (var j = 0; j < todaysOrders[i].items!.length; j++) {
+        for (var k = 0; k < categoriesManaged!.length; k++)
+          if (todaysOrders[i]
+                  .items![j]["CategoryName"]
+                  .toString()
+                  .toLowerCase() ==
+              categoriesManaged[k].toString().toLowerCase()) {
+            shopsForTodayOrders.add(todaysOrders[i].shopAddress.toString());
+          }
+      }
+    }
+    if (shopsForTodayOrders.length == 0) {
+      setState(() {
+        noManagedItems = true;
+        managedCategories = categoriesManaged!
+            .map(
+              (e) => e.toString().toLowerCase(),
+            )
+            .toList();
+      });
+    } else {
+      setState(() {
+        noManagedItems = false;
+        managedCategories = categoriesManaged!
+            .map(
+              (e) => e.toString().toLowerCase(),
+            )
+            .toList();
+      });
+    }
+    var uniqueValuesInShops = {...shopsForTodayOrders};
+    return uniqueValuesInShops.toList();
+  }
+
+  Future<void> refreshOrders() async {
+    return fetchTodayOrders().then((_) {
+      getShopsList().then((shoplist) {
+        setState(() {
+          shops = shoplist;
+          isLoading = false;
+        });
+      });
+    });
+  }
+
+  void refreshAction() async {
+    setState(() {
+      isLoading = true;
+      zeroOrders = false;
+      noManagedItems = true;
+    });
+    return fetchTodayOrders().then((_) {
+      getShopsList().then((shoplist) {
+        setState(() {
+          shops = shoplist;
+          isLoading = false;
+        });
+      });
+    });
+  }
+
+  void moveToOrders(BuildContext context) {
+    Navigator.of(context).pushReplacementNamed('/orders');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(getTodaysDate()),
-        actions: [
-          IconButton(onPressed: () => {}, icon: Icon(Icons.refresh)),
-          IconButton(
-              onPressed: () {
-                showLogoutDialog(context);
-              },
-              icon: Icon(Icons.login))
-        ],
-      ),
-      drawer: MainDrawer(),
-    );
+        appBar: AppBar(
+          title: Text("SHOPS"),
+          actions: [
+            IconButton(onPressed: refreshAction, icon: Icon(Icons.refresh)),
+            IconButton(
+                onPressed: () {
+                  showLogoutDialog(context);
+                },
+                icon: Icon(Icons.login))
+          ],
+        ),
+        drawer: MainDrawer(),
+        body: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : (ordersLoaded && zeroOrders)
+                ? RefreshIndicator(
+                    onRefresh: refreshOrders,
+                    child: Center(
+                      child: Text(
+                        'No orders',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                    ),
+                  )
+                : (ordersLoaded && noManagedItems)
+                    ? Center(
+                        child: Text(
+                          'No Orders for you today.',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: refreshOrders,
+                        child: ListView.builder(
+                            itemCount: shops.length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () => moveToOrders(context),
+                                child: Card(
+                                  elevation: 12.0,
+                                  child: ListTile(
+                                    leading: Icon(
+                                      Icons.shop_rounded,
+                                      color: Colors.white,
+                                    ),
+                                    title: Text(
+                                      shops[index].toString().toUpperCase(),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                    ),
+                                    tileColor: Colors.redAccent,
+                                  ),
+                                ),
+                              );
+                            }),
+                      ));
   }
 }
