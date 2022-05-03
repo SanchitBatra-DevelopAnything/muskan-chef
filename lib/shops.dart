@@ -232,6 +232,7 @@ class _ShopsPageState extends State<ShopsPage> {
   }
 
   void moveToOrders(BuildContext context, String shopName) {
+    print("GOING FOR THE SHOPNAME" + shopName);
     Navigator.of(context).pushReplacementNamed('/orders', arguments: shopName);
   }
 

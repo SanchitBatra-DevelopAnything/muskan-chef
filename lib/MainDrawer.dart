@@ -40,7 +40,8 @@ class MainDrawer extends StatelessWidget {
           ),
           Divider(),
           buildTile('Normal Orders', Icons.breakfast_dining, () {
-            Navigator.of(context).pushReplacementNamed('/orders');
+            Navigator.of(context)
+                .pushReplacementNamed('/orders', arguments: "all");
           }),
           Divider(),
           buildTile('Custom Orders (coming soon)', Icons.cake, () {

@@ -192,11 +192,11 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(
                   fontSize: 20, fontStyle: FontStyle.italic, color: Colors.red),
             ),
-            SizedBox(height: 10),
-            RaisedButton(
-              onPressed: () => {clearPreferences()},
-              child: Text("CLEAR"),
-            ),
+            // SizedBox(height: 10),
+            // RaisedButton(
+            //   onPressed: () => {clearPreferences()},
+            //   child: Text("CLEA"),
+            // ),
             SizedBox(height: 10),
             isLoading
                 ? CircularProgressIndicator(

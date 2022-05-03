@@ -54,7 +54,7 @@ class _OrderPageState extends State<OrderPage> {
     }
   }
 
-  Future<void> fetchTodayOrders() async {
+  Future<void> fetchTodayOrders(String shopName) async {
     var todaysDate = DateTime.now();
     var year = todaysDate.year.toString();
     var month = todaysDate.month.toString();
@@ -86,7 +86,15 @@ class _OrderPageState extends State<OrderPage> {
           ));
         });
         setState(() {
-          todaysOrders = loadedOrders.reversed.toList();
+          if (shopName == "all") {
+            todaysOrders = [];
+            todaysOrders = loadedOrders.reversed.toList();
+          } else {
+            todaysOrders = [];
+            todaysOrders = loadedOrders.reversed
+                .where((order) => order.shopAddress == shopName)
+                .toList();
+          }
           ordersLoaded = true;
         });
       }
@@ -206,7 +214,7 @@ class _OrderPageState extends State<OrderPage> {
   }
 
   Future<void> refreshOrders() async {
-    return fetchTodayOrders().then((_) {
+    return fetchTodayOrders(widget.shopName).then((_) {
       formBiforcatedItemsList().then((itemlist) {
         setState(() {
           biforcatedItemsList = itemlist;
@@ -222,7 +230,7 @@ class _OrderPageState extends State<OrderPage> {
       zeroOrders = false;
       noManagedItems = true;
     });
-    return fetchTodayOrders().then((_) {
+    return fetchTodayOrders(widget.shopName).then((_) {
       formBiforcatedItemsList().then((itemlist) {
         setState(() {
           biforcatedItemsList = itemlist;
@@ -294,7 +302,7 @@ class _OrderPageState extends State<OrderPage> {
       }
     }
 
-    fetchTodayOrders().then((_) {
+    fetchTodayOrders(widget.shopName).then((_) {
       formBiforcatedItemsList().then((itemlist) {
         setState(() {
           biforcatedItemsList = itemlist;
@@ -350,7 +358,7 @@ class _OrderPageState extends State<OrderPage> {
       isLoading = true;
     });
 
-    fetchTodayOrders().then((_) {
+    fetchTodayOrders(widget.shopName).then((_) {
       formBiforcatedItemsList().then((itemlist) {
         setState(() {
           biforcatedItemsList = itemlist;
