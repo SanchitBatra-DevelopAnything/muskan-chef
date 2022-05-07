@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MainDrawer extends StatelessWidget {
   final bool special;
@@ -40,9 +41,9 @@ class MainDrawer extends StatelessWidget {
             height: 25,
           ),
           Divider(),
-          buildTile('Normal Orders', Icons.breakfast_dining, () {
+          buildTile('All Orders', Icons.breakfast_dining, () {
             Navigator.of(context)
-                .pushReplacementNamed('/orders', arguments: "all");
+                .pushReplacementNamed('/orders', arguments: "All");
           }),
           Divider(),
           special

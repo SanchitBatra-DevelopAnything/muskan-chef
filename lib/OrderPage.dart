@@ -388,9 +388,12 @@ class _OrderPageState extends State<OrderPage> {
                 icon: Icon(Icons.login))
           ],
         ),
-        drawer: widget.shopName == "all"
-            ? MainDrawer(special: false)
-            : MainDrawer(special: true),
+        drawer: (widget.shopName != "all" &&
+                (managedCategories.contains("ice cream") ||
+                    managedCategories.contains("cakes & pastries") ||
+                    managedCategories.contains("cakes")))
+            ? MainDrawer(special: true)
+            : MainDrawer(special: false),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (ordersLoaded && zeroOrders)
