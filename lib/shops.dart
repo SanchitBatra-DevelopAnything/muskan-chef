@@ -2,6 +2,7 @@
 
 import 'dart:collection';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:muskan_chef_app/MainDrawer.dart';
 import 'package:muskan_chef_app/item.dart';
@@ -18,6 +19,8 @@ class ShopsPage extends StatefulWidget {
 }
 
 class _ShopsPageState extends State<ShopsPage> {
+  String deviceTokenToSendPushNotification = '';
+
   @override
   void initState() {
     // TODO: implement initState
@@ -236,8 +239,34 @@ class _ShopsPageState extends State<ShopsPage> {
     Navigator.of(context).pushReplacementNamed('/orders', arguments: shopName);
   }
 
+  Future<void> getDeviceTokenToSendNotification() async {
+    final FirebaseMessaging _fcm = FirebaseMessaging.instance;
+    final token = await _fcm.getToken();
+    deviceTokenToSendPushNotification = token.toString();
+
+    var shared = await SharedPreferences.getInstance();
+    var chef = shared.get('chefName');
+    if (chef.toString() == "null") {
+      print("Token Value of unknown user $deviceTokenToSendPushNotification");
+    } else {
+      var url = Uri.parse(
+          'https://muskan-admin-app-default-rtdb.firebaseio.com/chefNotificationTokens/' +
+              chef.toString().toUpperCase() +
+              '.json');
+      try {
+        await http.patch(url,
+            body:
+                json.encode({"chefToken": deviceTokenToSendPushNotification}));
+      } catch (error) {
+        print("UNABLE TO UPDATE NOTIFICATION TOKEN");
+        print(error);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    getDeviceTokenToSendNotification();
     return Scaffold(
         appBar: AppBar(
           title: Text("SHOPS"),
