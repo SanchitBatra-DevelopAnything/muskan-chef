@@ -86,7 +86,7 @@ class _OrderPageState extends State<OrderPage> {
           ));
         });
         setState(() {
-          if (shopName == "all") {
+          if (shopName == "All") {
             todaysOrders = [];
             todaysOrders = loadedOrders.reversed.toList();
           } else {
