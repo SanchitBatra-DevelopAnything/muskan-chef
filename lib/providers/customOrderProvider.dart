@@ -12,20 +12,28 @@ class CustomOrderProvider with ChangeNotifier {
   List<String> _shopNames = [];
 
   List<String> get shops {
-    _shopNames = [];
-    for (var i = 0; i < _customOrders.length; i++) {
-      _shopNames.add(_customOrders[i].shopAddress!);
-    }
+    formShops();
     return [..._shopNames];
   }
 
-  Future<void> getCustomOrders() async {
-    const url =
-        "https://muskan-admin-app-default-rtdb.firebaseio.com/processedShopCustomOrders.json";
+  Future<String> getCustomOrders() async {
+    var todaysDate = DateTime.now();
+    var year = todaysDate.year.toString();
+    var month = todaysDate.month.toString();
+    var day = todaysDate.day.toString();
+    var date = day + month + year;
+    var url =
+        "https://muskan-admin-app-default-rtdb.firebaseio.com/processedShopCustomOrders/" +
+            date +
+            "/" +
+            ".json";
     try {
       final response = await http.get(Uri.parse(url));
       final List<CustomOrder> loadedCustomOrders = [];
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData == null) {
+        return "ZeroOrders";
+      }
       extractedData.forEach((orderId, orderData) {
         loadedCustomOrders.add(CustomOrder(
             orderId: orderId,
@@ -35,9 +43,19 @@ class CustomOrderProvider with ChangeNotifier {
             customType: orderData['customType']));
       });
       _customOrders = loadedCustomOrders;
+      print(loadedCustomOrders[0].shopAddress);
+      formShops();
       notifyListeners();
+      return "OrdersPresent";
     } catch (error) {
       throw error;
+    }
+  }
+
+  formShops() {
+    _shopNames = [];
+    for (var i = 0; i < _customOrders.length; i++) {
+      _shopNames.add(_customOrders[i].shopAddress!);
     }
   }
 }

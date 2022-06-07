@@ -3,8 +3,10 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
+import 'package:muskan_chef_app/providers/customOrderProvider.dart';
 import 'package:muskan_chef_app/route_generator.dart';
 import 'package:muskan_chef_app/shops.dart';
+import 'package:provider/provider.dart';
 import 'LoginPage.dart';
 import 'notificationservice/local_notification_service.dart';
 
@@ -26,21 +28,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Muskan-Chef',
-      theme: ThemeData(
-        primarySwatch: Colors.red,
-        canvasColor: Color.fromARGB(255, 246, 248, 248),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CustomOrderProvider())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Muskan-Chef',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+          canvasColor: Color.fromARGB(255, 246, 248, 248),
+        ),
+        initialRoute: '/',
+        onGenerateRoute: RouteGenerator.generateRoute,
+        // routes: {
+        //   '/': (context) => HomePage(),
+        //   '/login': (context) => LoginPage(),
+        //   '/orders': (context) => OrderPage(),
+        //   '/shops': (context) => ShopsPage(),
+        // });
       ),
-      initialRoute: '/',
-      onGenerateRoute: RouteGenerator.generateRoute,
-      // routes: {
-      //   '/': (context) => HomePage(),
-      //   '/login': (context) => LoginPage(),
-      //   '/orders': (context) => OrderPage(),
-      //   '/shops': (context) => ShopsPage(),
-      // });
     );
   }
 }

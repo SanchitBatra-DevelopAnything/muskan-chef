@@ -9,14 +9,14 @@ class MainDrawer extends StatelessWidget {
     return ListTile(
       leading: Icon(
         icon,
-        size: 26,
+        size: 22,
         color: Colors.red,
       ),
       title: Text(
         title,
         style: TextStyle(
             fontFamily: 'RobotoCondensed',
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black),
       ),
@@ -41,19 +41,19 @@ class MainDrawer extends StatelessWidget {
             height: 25,
           ),
           Divider(),
-          buildTile('All Orders', Icons.breakfast_dining, () {
+          buildTile('All Regular Items', Icons.breakfast_dining, () {
             Navigator.of(context)
                 .pushReplacementNamed('/orders', arguments: "All");
           }),
           Divider(),
           special
-              ? buildTile("SHOPS", Icons.shop_2_rounded, () {
+              ? buildTile("SHOPS (Regular Orders)", Icons.shop_2_rounded, () {
                   Navigator.of(context).pushReplacementNamed('/shops');
                 })
               : SizedBox(height: 0),
           Divider(),
-          buildTile('Custom Orders (coming soon)', Icons.cake, () {
-            print("Coming Soon , Cant navigate now!");
+          buildTile('Custom Orders', Icons.cake, () {
+            Navigator.of(context).pushReplacementNamed('/customOrders');
           }),
           Divider(),
         ],
