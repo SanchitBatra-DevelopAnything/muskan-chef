@@ -236,7 +236,7 @@ class _ShopsPageState extends State<ShopsPage> {
 
   void moveToOrders(BuildContext context, String shopName) {
     print("GOING FOR THE SHOPNAME" + shopName);
-    Navigator.of(context).pushReplacementNamed('/orders', arguments: shopName);
+    Navigator.of(context).pushNamed('/orders', arguments: shopName);
   }
 
   Future<void> getDeviceTokenToSendNotification() async {
@@ -321,7 +321,7 @@ class _ShopsPageState extends State<ShopsPage> {
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white),
                                     ),
-                                    tileColor: Colors.redAccent,
+                                    tileColor: Colors.red,
                                   ),
                                 ),
                               );

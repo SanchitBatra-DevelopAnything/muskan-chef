@@ -42,8 +42,13 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
     super.didChangeDependencies();
   }
 
-  openCustomOrder(BuildContext context, String shopName) {
-    print("Open clicked");
+  openCustomOrder(BuildContext context, dynamic customOrder) {
+    Navigator.of(context).pushNamed('/customOrderView', arguments: {
+      'imgUrl': customOrder.imgUrl,
+      'cakeDescription': customOrder.cakeDescription,
+      'shopAddress': customOrder.shopAddress,
+      'customType': customOrder.customType
+    });
   }
 
   Future<void> refreshOrders() async {
@@ -69,8 +74,8 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
 
   @override
   Widget build(BuildContext context) {
-    final shops =
-        Provider.of<CustomOrderProvider>(context, listen: false).shops;
+    final customOrders =
+        Provider.of<CustomOrderProvider>(context, listen: false).customOrders;
     return Scaffold(
         appBar: AppBar(
           title: Text("Custom Orders"),
@@ -92,10 +97,11 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
                 : RefreshIndicator(
                     onRefresh: refreshOrders,
                     child: ListView.builder(
-                        itemCount: shops.length,
+                        itemCount: customOrders.length,
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () => openCustomOrder(context, shops[index]),
+                            onTap: () =>
+                                openCustomOrder(context, customOrders[index]),
                             child: Card(
                               elevation: 12.0,
                               child: ListTile(
@@ -104,12 +110,15 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
                                   color: Colors.white,
                                 ),
                                 title: Text(
-                                  shops[index].toString().toUpperCase(),
+                                  customOrders[index]
+                                      .shopAddress!
+                                      .toString()
+                                      .toUpperCase(),
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.white),
                                 ),
-                                tileColor: Colors.redAccent,
+                                tileColor: Colors.red,
                               ),
                             ),
                           );

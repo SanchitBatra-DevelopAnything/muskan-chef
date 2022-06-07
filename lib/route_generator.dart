@@ -3,6 +3,7 @@ import 'package:muskan_chef_app/LoginPage.dart';
 import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
 import 'package:muskan_chef_app/customOrderShops.dart';
+import 'package:muskan_chef_app/customOrderViewer.dart';
 import 'package:muskan_chef_app/shops.dart';
 
 import 'chef.dart';
@@ -34,6 +35,14 @@ class RouteGenerator {
         } else {
           return _errorRoute();
         }
+      case '/customOrderView':
+        if (args is Map<String, dynamic>) {
+          return MaterialPageRoute(
+              builder: (_) => CustomOrderView(
+                    orderDetails: args,
+                  ));
+        } else
+          return _errorRoute();
       case '/customOrders':
         return MaterialPageRoute(builder: (_) => CustomOrderShops());
       default:
