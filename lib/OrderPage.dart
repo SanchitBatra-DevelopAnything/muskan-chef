@@ -388,7 +388,7 @@ class _OrderPageState extends State<OrderPage> {
                 icon: Icon(Icons.login))
           ],
         ),
-        drawer: (widget.shopName != "all" &&
+        drawer: (widget.shopName != "All" &&
                 (managedCategories.contains("ice cream") ||
                     managedCategories.contains("cakes & pastries") ||
                     managedCategories.contains("cakes")))

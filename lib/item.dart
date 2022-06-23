@@ -4,7 +4,7 @@ class Item {
   String? item;
   String? itemKey;
   String? weight;
-  int? price;
+  dynamic price;
   int? quantity;
   String? status;
   String? subcategoryKey;

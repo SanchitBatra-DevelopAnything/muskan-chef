@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
 import 'package:muskan_chef_app/providers/customOrderProvider.dart';
+import 'package:muskan_chef_app/providers/orderWiseSegregation.dart';
 import 'package:muskan_chef_app/route_generator.dart';
 import 'package:muskan_chef_app/shops.dart';
 import 'package:provider/provider.dart';
@@ -30,7 +31,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => CustomOrderProvider())
+        ChangeNotifierProvider(create: (context) => CustomOrderProvider()),
+        ChangeNotifierProvider(
+          create: (context) => OrderWiseSegregation(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

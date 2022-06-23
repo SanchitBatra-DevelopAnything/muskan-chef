@@ -4,6 +4,7 @@ import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
 import 'package:muskan_chef_app/customOrderShops.dart';
 import 'package:muskan_chef_app/customOrderViewer.dart';
+import 'package:muskan_chef_app/orderWise.dart';
 import 'package:muskan_chef_app/shops.dart';
 
 import 'chef.dart';
@@ -15,6 +16,8 @@ class RouteGenerator {
     switch (settings.name) {
       case '/':
         return MaterialPageRoute(builder: (_) => HomePage());
+      case '/orderWise':
+        return MaterialPageRoute(builder: (_) => OrderWise());
       case '/login':
         if (args is List<Chef>) {
           return MaterialPageRoute(

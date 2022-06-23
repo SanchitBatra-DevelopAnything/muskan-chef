@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'MainDrawer.dart';
 import 'providers/customOrderProvider.dart';
@@ -16,6 +17,8 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
   var _isFirstTime = true;
   var ordersLoaded = false;
   var zeroOrders = false;
+
+  List<String> managedCategories = [];
 
   @override
   void didChangeDependencies() {
@@ -39,7 +42,18 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
               }));
     }
     _isFirstTime = false;
+    getManagedCategories();
     super.didChangeDependencies();
+  }
+
+  getManagedCategories() async {
+    var shared = await SharedPreferences.getInstance();
+    var categoriesManaged = shared.getStringList('manages');
+
+    setState(() {
+      managedCategories =
+          categoriesManaged!.map((e) => e.toString().toLowerCase()).toList();
+    });
   }
 
   openCustomOrder(BuildContext context, dynamic customOrder) {
@@ -80,7 +94,11 @@ class _CustomOrderShopsState extends State<CustomOrderShops> {
         appBar: AppBar(
           title: Text("Custom Orders"),
         ),
-        drawer: MainDrawer(special: true),
+        drawer: managedCategories.contains("ice cream") ||
+                managedCategories.contains("cakes & pastries") ||
+                managedCategories.contains("cakes")
+            ? MainDrawer(special: true)
+            : MainDrawer(special: false),
         body: isLoading
             ? Center(child: CircularProgressIndicator())
             : (ordersLoaded && zeroOrders)

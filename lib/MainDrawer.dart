@@ -52,6 +52,10 @@ class MainDrawer extends StatelessWidget {
                 })
               : SizedBox(height: 0),
           Divider(),
+          buildTile('Edit Item Counts', Icons.edit, () {
+            Navigator.of(context).pushReplacementNamed('/orderWise');
+          }),
+          Divider(),
           buildTile('Custom Orders', Icons.cake, () {
             Navigator.of(context).pushReplacementNamed('/customOrders');
           }),
