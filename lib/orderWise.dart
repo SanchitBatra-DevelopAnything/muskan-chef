@@ -62,8 +62,7 @@ class _OrderWiseState extends State<OrderWise> {
             ? MainDrawer(special: true)
             : MainDrawer(special: false),
         appBar: AppBar(
-            title: Text("Order Wise Segregation"),
-            backgroundColor: Colors.black),
+            title: Text("Order Wise Segregation"), backgroundColor: Colors.red),
         body: showError
             ? Center(
                 child: Text("Error"),
@@ -75,7 +74,25 @@ class _OrderWiseState extends State<OrderWise> {
                     ),
                   )
                 : ListView.separated(
-                    itemBuilder: (_, index) => Text("Item $index"),
+                    itemBuilder: (_, index) => ListTile(
+                          title: Text(
+                            allOrders[index].shopAddress!,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Text(
+                            allOrders[index].orderTime!,
+                            style: TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.bold),
+                          ),
+                          trailing: Icon(
+                            Icons.arrow_forward_ios_outlined,
+                            color: Colors.black,
+                            size: 20,
+                          ),
+                        ),
                     separatorBuilder: (_, __) => const Divider(),
                     itemCount: allOrders.length));
   }
