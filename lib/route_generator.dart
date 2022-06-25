@@ -4,7 +4,9 @@ import 'package:muskan_chef_app/OrderPage.dart';
 import 'package:muskan_chef_app/SplashScreen.dart';
 import 'package:muskan_chef_app/customOrderShops.dart';
 import 'package:muskan_chef_app/customOrderViewer.dart';
+import 'package:muskan_chef_app/order.dart';
 import 'package:muskan_chef_app/orderWise.dart';
+import 'package:muskan_chef_app/orderWiseItems.dart';
 import 'package:muskan_chef_app/shops.dart';
 
 import 'chef.dart';
@@ -25,6 +27,13 @@ class RouteGenerator {
                     chefList: args,
                   ));
         } else {
+          return _errorRoute();
+        }
+      case '/orderItems':
+        if (args is Order) {
+          return MaterialPageRoute(builder: (_) => OrderWiseItems(order: args));
+        } else {
+          print("Order ni hai ye");
           return _errorRoute();
         }
       case '/shops':

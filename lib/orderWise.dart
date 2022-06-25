@@ -75,6 +75,10 @@ class _OrderWiseState extends State<OrderWise> {
                   )
                 : ListView.separated(
                     itemBuilder: (_, index) => ListTile(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/orderItems',
+                                arguments: allOrders[index]);
+                          },
                           title: Text(
                             allOrders[index].shopAddress!,
                             style: TextStyle(
