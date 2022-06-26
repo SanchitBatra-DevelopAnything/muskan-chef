@@ -46,8 +46,10 @@ class _OrderWiseItemsState extends State<OrderWiseItems> {
                   height: 40,
                   child: CountButtonView(
                       itemIndex: index,
-                      count: 7,
-                      max: 10,
+                      plusDisabled: items[index]['yetToPrepare'] ==
+                          items[index]['quantity'],
+                      count: items[index]['yetToPrepare'],
+                      max: items[index]['quantity'],
                       onChange: (count) {},
                       orderId: widget.order.orderId!),
                 ),

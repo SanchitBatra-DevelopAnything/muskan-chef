@@ -8,6 +8,7 @@ class CountButtonView extends StatefulWidget {
   final CountButtonClickCallBack onChange;
   final int count;
   final int max;
+  final bool plusDisabled;
 
   const CountButtonView(
       {Key? key,
@@ -15,6 +16,7 @@ class CountButtonView extends StatefulWidget {
       required this.orderId,
       required this.onChange,
       required this.max,
+      required this.plusDisabled,
       required this.count})
       : super(key: key);
 
@@ -23,11 +25,16 @@ class CountButtonView extends StatefulWidget {
 }
 
 class _CountButtonViewState extends State<CountButtonView> {
-  int quantity = 0;
+  late int quantity;
+  late bool plusButtonDisabled;
 
   @override
   void initState() {
     // TODO: implement initState
+    setState(() {
+      quantity = widget.count;
+      plusButtonDisabled = widget.plusDisabled;
+    });
     super.initState();
   }
 
@@ -35,11 +42,21 @@ class _CountButtonViewState extends State<CountButtonView> {
     if (quantity + addValue == 0) {
       setState(() {
         quantity = 0;
+        if (quantity == widget.max) {
+          plusButtonDisabled = true;
+        } else {
+          plusButtonDisabled = false;
+        }
       });
     }
     if (quantity + addValue > 0) {
       setState(() {
         quantity += addValue;
+        if (quantity == widget.max) {
+          plusButtonDisabled = true;
+        } else {
+          plusButtonDisabled = false;
+        }
       });
     }
 
@@ -51,9 +68,9 @@ class _CountButtonViewState extends State<CountButtonView> {
   @override
   Widget build(BuildContext context) {
     var count = widget.count;
-    setState(() {
-      quantity = widget.count;
-    });
+    // setState(() {
+    //   quantity = widget.count;
+    // });
     return SizedBox(
       width: 120.0,
       height: 50.0,
@@ -68,6 +85,9 @@ class _CountButtonViewState extends State<CountButtonView> {
             children: <Widget>[
               GestureDetector(
                   onTap: () {
+                    if (count == 0) {
+                      return;
+                    }
                     updateCount(-1);
                   },
                   child: Container(
@@ -97,12 +117,16 @@ class _CountButtonViewState extends State<CountButtonView> {
               ),
               GestureDetector(
                   onTap: () {
+                    if (plusButtonDisabled) {
+                      return;
+                    }
                     updateCount(1);
                   },
                   child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(22.0),
-                          color: Colors.black),
+                          color:
+                              !plusButtonDisabled ? Colors.black : Colors.grey),
                       width: 40.0,
                       child: Center(
                           child: Text(
