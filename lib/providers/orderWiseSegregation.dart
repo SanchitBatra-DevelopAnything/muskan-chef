@@ -12,6 +12,32 @@ class OrderWiseSegregation with ChangeNotifier {
     return [..._allOrders];
   }
 
+  Future<void> updateItemCount(
+      String orderId, int itemIndex, int updatedCount) async {
+    print("TRIGGERED UPDATE");
+    var todaysDate = DateTime.now();
+    var year = todaysDate.year.toString();
+    var month = todaysDate.month.toString();
+    var day = todaysDate.day.toString();
+    var date = day + month + year;
+    var index = itemIndex.toString();
+    print("item index going is ${index}");
+    var url = Uri.parse(
+        'https://muskan-admin-app-default-rtdb.firebaseio.com/ProcessedShopOrders/' +
+            date +
+            '/' +
+            orderId +
+            '/items/' +
+            index +
+            '.json');
+    try {
+      final response = await http.patch(url,
+          body: json.encode({'yetToPrepare': updatedCount}));
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future<void> fetchTodaysOrders() async {
     var todaysDate = DateTime.now();
     var year = todaysDate.year.toString();
