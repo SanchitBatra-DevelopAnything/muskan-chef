@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:muskan_chef_app/itemQuantityCounter.dart';
 import 'package:muskan_chef_app/order.dart';
 
 class OrderWiseItems extends StatefulWidget {
@@ -41,10 +42,14 @@ class _OrderWiseItemsState extends State<OrderWiseItems> {
                   "Total ordered : ${items[index]['quantity']}",
                   style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                 ),
-                trailing: Icon(
-                  Icons.arrow_forward_ios_outlined,
-                  color: Colors.black,
-                  size: 20,
+                trailing: Container(
+                  height: 40,
+                  child: CountButtonView(
+                      itemIndex: index,
+                      count: 7,
+                      max: 10,
+                      onChange: (count) {},
+                      orderId: widget.order.orderId!),
                 ),
               ),
           separatorBuilder: (_, __) => const Divider(),

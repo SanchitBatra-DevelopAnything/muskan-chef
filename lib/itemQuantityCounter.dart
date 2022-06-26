@@ -7,12 +7,14 @@ class CountButtonView extends StatefulWidget {
   final String orderId;
   final CountButtonClickCallBack onChange;
   final int count;
+  final int max;
 
   const CountButtonView(
       {Key? key,
       required this.itemIndex,
       required this.orderId,
       required this.onChange,
+      required this.max,
       required this.count})
       : super(key: key);
 
