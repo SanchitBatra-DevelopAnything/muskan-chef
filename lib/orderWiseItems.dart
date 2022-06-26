@@ -14,6 +14,7 @@ class OrderWiseItems extends StatefulWidget {
 
 class _OrderWiseItemsState extends State<OrderWiseItems> {
   var isUpdating = false;
+  bool _isFirstTime = true;
 
   Future<void> editCount(String orderId, int itemIndex, int updatedCount) {
     return Provider.of<OrderWiseSegregation>(context, listen: false)
@@ -21,22 +22,21 @@ class _OrderWiseItemsState extends State<OrderWiseItems> {
   }
 
   @override
+  void didChangeDependencies() {
+    if (_isFirstTime) {
+      Provider.of<OrderWiseSegregation>(context, listen: false)
+          .fetchItems(widget.order.orderId!);
+      _isFirstTime = false;
+    }
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var items = widget.order.items;
+    var items = Provider.of<OrderWiseSegregation>(context).items;
     return Scaffold(
       appBar: AppBar(
         title: Text("ITEMS OF ORDER"),
-        actions: [
-          GestureDetector(
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Icon(
-                Icons.done_all,
-              ),
-            ),
-          ),
-        ],
       ),
       body: isUpdating
           ? Center(
@@ -81,9 +81,21 @@ class _OrderWiseItemsState extends State<OrderWiseItems> {
                             });
                             editCount(widget.order.orderId!, index, count)
                                 .then((_) => {
-                                      setState(() {
-                                        isUpdating = false;
-                                      })
+                                      Provider.of<OrderWiseSegregation>(context,
+                                              listen: false)
+                                          .fetchTodaysOrders()
+                                          .then((_) => {
+                                                Provider.of<OrderWiseSegregation>(
+                                                        context,
+                                                        listen: false)
+                                                    .fetchItems(
+                                                        widget.order.orderId!)
+                                                    .then((_) => {
+                                                          setState(() {
+                                                            isUpdating = false;
+                                                          })
+                                                        })
+                                              })
                                     }); //future banaao isko.
                           },
                           orderId: widget.order.orderId!),

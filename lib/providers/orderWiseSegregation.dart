@@ -7,9 +7,14 @@ import 'package:http/http.dart' as http;
 
 class OrderWiseSegregation with ChangeNotifier {
   List<Order> _allOrders = [];
+  List<dynamic> _items = [];
 
   List<Order> get allOrders {
     return [..._allOrders];
+  }
+
+  List<dynamic> get items {
+    return [..._items];
   }
 
   Future<void> updateItemCount(
@@ -35,6 +40,36 @@ class OrderWiseSegregation with ChangeNotifier {
           body: json.encode({'yetToPrepare': updatedCount}));
     } catch (error) {
       print(error);
+    }
+  }
+
+  Future<void> fetchItems(String orderId) async {
+    var todaysDate = DateTime.now();
+    var year = todaysDate.year.toString();
+    var month = todaysDate.month.toString();
+    var day = todaysDate.day.toString();
+    var date = day + month + year;
+    var url = Uri.parse(
+        'https://muskan-admin-app-default-rtdb.firebaseio.com/ProcessedShopOrders/' +
+            date +
+            '/' +
+            orderId +
+            '/items.json');
+    try {
+      final response = await http.get(url);
+      if (response == "null") {
+        _items = [];
+        notifyListeners();
+        return;
+      } else {
+        var extractedData = json.decode(response.body) as List<dynamic>;
+        print(extractedData);
+        _items = extractedData;
+        notifyListeners();
+      }
+    } catch (error) {
+      print(error);
+      throw error;
     }
   }
 
