@@ -43,7 +43,7 @@ class _LoginPageState extends State<LoginPage> {
       return;
     }
 
-    Navigator.of(context).pushReplacementNamed('/orders', arguments: "all");
+    Navigator.of(context).pushReplacementNamed('/orders', arguments: "All");
   }
 
   void checkAuth(List<Chef> allChefs) {
